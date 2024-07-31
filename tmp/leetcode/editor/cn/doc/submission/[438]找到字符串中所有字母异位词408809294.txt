@@ -1,0 +1,47 @@
+class Solution {
+    public List<Integer> findAnagrams(String s, String p) {
+        
+        Map<Character, Integer> need = new HashMap<>();
+        Map<Character, Integer> window = new HashMap<>();
+        
+        char[] pChars = p.toCharArray();
+        for (int i=0; i<p.length(); i++) {
+            need.put(pChars[i], need.getOrDefault(pChars[i], 0) + 1);
+        }
+        
+        int valid = 0;
+        int left = 0, right = 0;
+        List<Integer> res = new ArrayList<>();
+        
+        char[] sChars = s.toCharArray();
+        while (right < s.length()) {
+            char c = sChars[right];
+            right++;
+            
+            if (need.containsKey(c)) {
+                window.put(c, window.getOrDefault(c, 0) + 1);
+                if (window.get(c).equals(need.get(c))) {
+                    valid++;
+                }
+            }
+            
+            while (right - left >= p.length()) {
+                if (valid == need.size()) {
+                    res.add(left);
+                }
+                char d = sChars[left];
+                left++;
+                
+                if (need.containsKey(d)) {
+                    if (window.get(d).equals(need.get(d))) {
+                        valid--;
+                    }
+                    window.put(d, window.get(d) - 1);
+                }
+            }
+        }
+								return res;
+    }
+}
+//runtime:25 ms
+//memory:42.8 MB

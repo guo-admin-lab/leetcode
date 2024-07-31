@@ -1,0 +1,27 @@
+class Solution {
+    // public int maxSubArray(int[] nums) {
+    //     int result = Integer.MIN_VALUE;
+    //     int l = nums.length;
+    //     for (int i = 0; i < l; ++i) {
+    //         int sum = nums[i];
+    //         result = Math.max(sum, result);
+    //         for (int j = i + 1; j < l; ++j) {
+    //             sum += nums[j];
+    //             result = Math.max(sum, result);
+    //         }
+    //     }
+    //     return result;
+    // }
+
+    public int maxSubArray(int[] nums) {
+        int curSum = 0, maxSum = nums[0];
+        int ll = nums.length;
+        for (int i = 0; i < ll; ++i) {
+            curSum = Math.max(nums[i], curSum + nums[i]);
+            maxSum = Math.max(curSum, maxSum);
+        }
+        return maxSum;
+    }
+}
+//runtime:1 ms
+//memory:50.2 MB

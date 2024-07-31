@@ -1,0 +1,25 @@
+class Solution {
+    public void moveZeroes(int[] nums) {
+        method1(nums);
+    }
+
+    // 方法一：遍历 + 创建新数组 + 覆盖旧数组
+    public void method1(int[] nums) {
+        int[] res = new int[nums.length];
+        int index = 0; // res数组的索引
+        // 填充新数组
+        for (int num : nums) {
+            if (num != 0) {
+                res[index++] = num;
+            }
+        }
+        // 覆盖旧数组
+        Arrays.fill(nums, 0);
+        for (int i=0; i<res.length; i++) {
+            nums[i] = res[i];
+        }
+    }
+}
+
+//runtime:1 ms
+//memory:43.8 MB

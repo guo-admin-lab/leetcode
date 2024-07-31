@@ -1,0 +1,97 @@
+> Problem: [128. 最长连续序列](https://leetcode.cn/problems/longest-consecutive-sequence/description/)
+
+[TOC]
+
+# 思路
+
+> 牛刀小用了，这里官方题解查询hashtable是否存在n-1元素一句话就完成了。用并查集写一堆玩儿。
+
+# 复杂度
+
+- 时间复杂度:
+
+> O(n)
+
+- 空间复杂度:
+
+> O(n)
+
+# Code
+
+* []
+
+```C++
+
+class UnionFind {
+  private:
+  vector<pair<size_t, size_t> > parent; 
+  vector<size_t> rank;
+  //<root_index, size>
+  //track root element's index with pass compression
+  //track size, only need to update size to root index
+
+  public:
+  explicit UnionFind(size_t& n) : parent(n, {0, 1}), rank(n, 0) {
+      for (size_t i = 0; i < n ; ++i) {
+          parent[i].first = i;
+      }
+  }
+
+  size_t find_withPathConpression(const size_t& num) {
+      if (parent[num].first != num) {
+          parent[num].first = find_withPathConpression(parent[num].first);
+      }
+      return parent[num].first;
+  }
+
+  void unionSet(const size_t& eleA, const size_t& eleB) {
+      size_t rootA = find_withPathConpression(eleA);
+      size_t rootB = find_withPathConpression(eleB);
+      if (rootA != rootB) { //shall we set a rank compare here?
+          if (rank[rootA] < rank[rootB]) {
+              parent[rootA].first = rootB;
+              parent[rootB].second += parent[rootA].second;
+          } else if (rank[rootA] > rank[rootB]) {
+              parent[rootB].first = rootA;
+              parent[rootA].second += parent[rootB].second;               
+          } else {
+             parent[rootB].first = rootA;
+             parent[rootA].second += parent[rootB].second;
+             ++rank[rootA];
+          }         
+      }
+  }
+
+  size_t getMaxSize () const {
+      size_t max_size = 0;
+      for (const auto& [root, size] : parent) {
+          //max_size = std::max(max_size, size);
+          max_size = (size > max_size) ? size : max_size; 
+      }
+      return max_size;
+  }
+};
+
+class Solution {
+public:
+  size_t longestConsecutive(vector<int>& nums) {
+      size_t len = nums.size();
+      unordered_map<int, size_t> hashtable;
+      UnionFind uf(len);
+
+      for(size_t i = 0; i < len; ++i) {
+          hashtable[nums[i]] = i;
+      }
+      
+      for(const auto& num : nums) {
+          if (hashtable.count(num + 1)) {
+              uf.unionSet(hashtable[num], hashtable[num+ 1]);
+          }
+      }
+
+      return uf.getMaxSize();
+  }
+};
+
+```
+

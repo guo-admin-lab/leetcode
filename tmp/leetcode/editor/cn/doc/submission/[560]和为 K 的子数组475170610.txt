@@ -1,0 +1,50 @@
+class Solution {
+    public int subarraySum(int[] nums, int k) {
+        return method1(nums, k);
+    }
+
+    // 错误方法：因为没考虑【特殊情况一：0序列】和【特殊情况二：sum>target不能直接返回，因为nums[i]有负数，sum += nums[i]后可能会导致sum<target】
+    public static int method_err(int[] nums, int target) {
+        int resCnt = 0;
+        int nSize = nums.length;
+        int start = 0;  // 控制连续序列的起始索引
+        while (start < nSize) {
+            int sum = 0;
+            for (int i=start; i<nSize; i++) {  // 注意：这里不是i=start+1,因为要从i位置就开始算起
+                if (sum < target) {
+                    sum += nums[i];
+                } else if (sum > target) {
+                    break;
+                } else {
+                    if (i+1 < nSize && nums[i+1] == 0) resCnt += 2;  // 如果后面的数是0，则多算一个序列
+                    else resCnt += 1;
+                }
+            }
+            // 处理最后一个数 | for循环进不去的情况
+            if (sum == target) resCnt++;
+            start++;
+        }
+        return resCnt;
+    }
+
+    public static int method1(int[] nums, int target) {
+        int resCnt = 0;
+        int nSize = nums.length;
+        int start = 0;  // 控制连续序列的起始索引
+        while (start < nSize) {
+            int sum = 0;
+            for (int i=start; i<nSize; i++) {  // 注意：这里不是i=start+1,因为要从i位置就开始算起
+                // if (sum > target) break;  // 注意：这里不能直接跳出，因为nums[i]有负数，之后再加一个负数可能会导致sum<target
+                sum += nums[i];
+                // 有结果后立马判断一下
+                if (sum == target) resCnt++;
+            }
+            start++;
+        }
+        return resCnt;
+    }
+
+}
+
+//runtime:1609 ms
+//memory:43.8 MB

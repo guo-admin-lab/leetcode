@@ -1,0 +1,20 @@
+class Solution {
+    public void moveZeroes(int[] nums) {
+        int left = 0, right = 0, ll = nums.length;
+        while(right < ll) {
+            if (nums[right] != 0) {
+                swap(nums, left, right);
+                left++;
+            }
+            right++;
+        }
+    }
+
+    public void swap(int[] n, int left, int right) {
+        int temp = n[left];
+        n[left] = n[right];
+        n[right] = temp;
+    }
+}
+//runtime:2 ms
+//memory:42.6 MB
